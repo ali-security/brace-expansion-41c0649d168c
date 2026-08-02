@@ -2,18 +2,18 @@ name: CI
 
 on:
   push:
-    branches: ['main']
+    branches: [main, master]
   pull_request:
     paths:
-      - 'src/**'
-      - 'test/**'
+      - src/**
+      - test/**
       - '*.json'
       - '*.js'
       - '*.ts'
-      - 'lib/**'
-      - 'scripts/**'
-      - '.github/workflows/ci.yml'
-      - 'package.json'
+      - lib/**
+      - scripts/**
+      - .github/workflows/ci.yml
+      - package.json
   workflow_dispatch:
 
 permissions:
@@ -25,14 +25,14 @@ jobs:
       matrix:
         node-version: [23.x, 18.x, 20.x, 22.x, 24.x, 25.x]
         platform:
-        - os: ubuntu-latest
-          shell: bash
-        - os: macos-latest
-          shell: bash
-        - os: windows-latest
-          shell: bash
-        - os: windows-latest
-          shell: powershell
+          - os: ubuntu-24.04
+            shell: bash
+          - os: macos-15
+            shell: bash
+          - os: windows-2025
+            shell: bash
+          - os: windows-2025
+            shell: powershell
       fail-fast: false
 
     runs-on: ${{ matrix.platform.os }}
@@ -56,11 +56,11 @@ jobs:
         run: npm test -- -c -t0
 
       - name: Pack tarball
-        if: matrix.platform.os == 'ubuntu-latest' && matrix.platform.shell == 'bash' && matrix.node-version == '23.x'
+        if: matrix.platform.os == 'ubuntu-24.04' && matrix.platform.shell == 'bash' && matrix.node-version == '23.x'
         run: npm pack
 
       - name: Upload tarball
-        if: matrix.platform.os == 'ubuntu-latest' && matrix.platform.shell == 'bash' && matrix.node-version == '23.x'
+        if: matrix.platform.os == 'ubuntu-24.04' && matrix.platform.shell == 'bash' && matrix.node-version == '23.x'
         uses: actions/upload-artifact@v4
         with:
           name: npm-tarball
